@@ -14,6 +14,10 @@ jobs:
       - name: re-initialize repo
         shell: bash
         id: git-status
+        env:
+          GIT_USERNAME: ${{secrets.GIT_USERNAME}}
+          GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
+          GIT_REMOTE_REPO: ${{secrets.GIT_REMOTE_REPO}}
         run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
@@ -29,3 +33,5 @@ jobs:
           git status
           git commit -m "$git_message"
           git status
+          git remote add origin $GIT_REMOTE_REPO
+          git git push --set-upstream origin master

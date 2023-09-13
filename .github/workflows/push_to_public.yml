@@ -11,7 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: list files
+      - name: re-initialize repo
         shell: bash
-        run: git status
         id: git-status
+        run: | 
+          rm -r .git
+          git init
+          cat .gitignore.public >> .gitignore
+          git status
+
+
+        

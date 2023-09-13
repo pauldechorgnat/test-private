@@ -34,4 +34,4 @@ jobs:
           git commit -m "$git_message"
           git status
           git remote add origin $GIT_REMOTE_REPO
-          git git push --set-upstream origin master
+          git push --set-upstream origin master

@@ -3,36 +3,59 @@ name: Push public files to another repo
 on:
   push:
     branches:
-      - develop
+      - master
   
 jobs:
   push:
     name: Push public files to public repo
     runs-on: ubuntu-latest
+    env:
+      # DESTINATION_REPOSITORY_USERNAME: ${{secrets.DESTINATION_REPOSITORY_USERNAME}}
+      # DESTINATION_REPOSITORY_NAME: ${{secrets.DESTINATION_REPOSITORY_NAME}}
+      # GITHUB_SERVER: ${{secrets.GITHUB_SERVER}}
+      # API_TOKEN_GITHUB: ${{secrets.API_TOKEN_GITHUB}}
+      # USER_NAME: ${{secrets.USER_NAME}}
+      # USER_EMAIL: ${{secrets.USER_EMAIL}}
+      SSH_DEPLOY_KEY: ${{secrets.SSH_DEPLOY_KEY}}
     steps:
-      - uses: actions/checkout@v1
-      - name: re-initialize repo
+      - uses: actions/checkout@v2
+      - name: Get last commit message
         shell: bash
-        id: git-status
-        env:
-          GIT_USERNAME: ${{secrets.GIT_USERNAME}}
-          GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
-          GIT_REMOTE_REPO: ${{secrets.GIT_REMOTE_REPO}}
+        id: get_last_commit_message
         run: |
-          echo $GIT_REMOTE_REPO $GIT_USER_EMAIL 
-          git config --global user.email $GIT_USER_EMAIL
-          git config --global user.name $GIT_USERNAME
-          export git_message=$(git log -1 --pretty=%B)
-          echo $git_message
+          echo "[+] Extracting last commit message"
+          export LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          echo "Last commit message:" $LAST_COMMIT_MESSAGE
+          
+          echo "[+] Deleting repo information"
           rm -r .git
-          git init
+          git init 
+
+          echo "[+] Replacing .gitignore content"
           echo -e "\n" >> .gitignore
           cat .gitignore.public >> .gitignore
-          git status
-          cat .gitignore
+          
+          echo "[+] Commit"
+          git config --global user.email paul.dechorgnat@gmail.com
+          git config --global user.name pauldechorgnat
           git add --all
-          git status
-          git commit -m "$git_message"
-          git status
-          git remote add origin git@github.com:pauldechorgnat/test-public.git
-          git push --set-upstream origin master
+          git commit -m "$LAST_COMMIT_MESSAGE" 
+
+          echo "[+] SSH Configuration"
+          mkdir --parents "$HOME/.ssh"
+          DEPLOY_KEY_FILE="$HOME/.ssh/deploy_key"
+          echo "${SSH_DEPLOY_KEY}" > "$DEPLOY_KEY_FILE"
+          chmod 600 "$DEPLOY_KEY_FILE"
+
+          SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
+          ssh-keyscan -H github.com > "$SSH_KNOWN_HOSTS_FILE"
+
+          export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
+
+          GIT_CMD_REPOSITORY="git@github.com:pauldechorgnat/test-public.git"
+          
+          echo "[+] Setting Github remote repo"
+          # git remote add origin git@github.com:pauldechorgnat/test-public.git
+          
+          echo [+] Push
+          git push "$GIT_CMD_REPOSITORY" --set-upstream master --force

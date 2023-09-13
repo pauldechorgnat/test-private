@@ -34,5 +34,5 @@ jobs:
           git status
           git commit -m "$git_message"
           git status
-          git remote add origin https://github.com/pauldechorgnat/test-public.git
+          git remote add origin git@github.com:pauldechorgnat/test-public.git
           git push --set-upstream origin master

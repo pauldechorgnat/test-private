@@ -15,8 +15,8 @@ jobs:
         shell: bash
         id: git-status
         run: |
-          message = $(git log -1 --pretty=%B)
-          echo $message
+          export git_message=$(git log -1 --pretty=%B)
+          echo $git_message
           rm -r .git
           git init
           echo -e "\n" >> .gitignore

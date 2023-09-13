@@ -6,11 +6,12 @@ on:
       - develop
   
 jobs:
-  name: Push public files to public repo
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v1
-    - name: list files
-      shell: bash
-      run: git status
-      id: git-status
+  push:
+    name: Push public files to public repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: list files
+        shell: bash
+        run: git status
+        id: git-status

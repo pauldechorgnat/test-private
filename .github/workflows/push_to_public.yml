@@ -19,8 +19,9 @@ jobs:
           GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
           GIT_REMOTE_REPO: ${{secrets.GIT_REMOTE_REPO}}
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          echo $GIT_REMOTE_REPO $GIT_USER_EMAIL 
+          git config --global user.email $GIT_USER_EMAIL
+          git config --global user.name $GIT_USERNAME
           export git_message=$(git log -1 --pretty=%B)
           echo $git_message
           rm -r .git

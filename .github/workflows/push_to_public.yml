@@ -17,7 +17,7 @@ jobs:
         run: | 
           rm -r .git
           git init
-          echo "\n" >> .gitignore
+          echo -e "\n" >> .gitignore
           cat .gitignore.public >> .gitignore
           git status
           cat .gitignore

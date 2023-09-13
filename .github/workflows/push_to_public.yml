@@ -24,7 +24,6 @@ jobs:
           git status
           cat .gitignore
           git add --all
-          
-
-
-        
+          git status
+          git commit -m $git_message
+          git status

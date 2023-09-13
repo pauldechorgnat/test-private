@@ -14,13 +14,17 @@ jobs:
       - name: re-initialize repo
         shell: bash
         id: git-status
-        run: | 
+        run: |
+          message = $(git log -1 --pretty=%B)
+          echo $message
           rm -r .git
           git init
           echo -e "\n" >> .gitignore
           cat .gitignore.public >> .gitignore
           git status
           cat .gitignore
+          git add --all
+          
 
 
         

@@ -19,6 +19,7 @@ jobs:
           git init
           cat .gitignore.public >> .gitignore
           git status
+          cat .gitignore
 
 
         

@@ -9,7 +9,7 @@ jobs:
   name: Push public files to public repo
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: list files
       shell: bash
       run: git status
